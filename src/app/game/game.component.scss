@@ -11,7 +11,7 @@
 .playerBracket {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 12px;
   width: 200px;
 }
 
@@ -41,13 +41,14 @@
 }
 
 .discards {
-    transform: scale(1.0) translateX(-165px) translateY(-200px) rotate(-13deg)
+    transform: scale(1.0) translateX(-205px) translateY(-240px) rotate(-13deg)
 }
 
 .addButton {
   position: absolute;
   bottom: 32px;
   right: 32px;
+  background-color: orangered;
 }
 
 @keyframes pickCardAnimation {

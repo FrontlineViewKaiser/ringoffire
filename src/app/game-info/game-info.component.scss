@@ -1,0 +1,14 @@
+.infoCard {
+    position: absolute;
+    left: 32px;
+    top: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 200px;
+}
+
+.hidden {
+    display: none !important;
+}
