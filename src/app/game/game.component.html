@@ -2,22 +2,22 @@
 
 <div class="playingBoard">
 
-<app-player *ngFor="let player of this.game.players; let i = index" [playerActive]=" i == this.game.currentPlayer" [name]="player" [ngStyle]="{'top.px': 32 + i*75}"
+<app-player *ngFor="let player of this.game?.players; let i = index" [playerActive]=" i == this.game?.currentPlayer" [name]="player" [ngStyle]="{'top.px': 32 + i*75}"
     class="playerBracket"></app-player>    
 
     <div class="cardStack">
-        <img *ngFor="let c of this.game.stack; let i = index" [ngStyle]="{'right.px': i*1.2, 'bottom.px': i*1.2}"
+        <img *ngFor="let c of this.game?.stack; let i = index" [ngStyle]="{'right.px': i*1.2, 'bottom.px': i*1.2}"
             src="assets/img/card_cover.png" alt="">
-        <img (click)="drawCard()" class="topCard" [ngStyle]="{'right.px': this.game.stack.length*1.2, 'bottom.px': this.game.stack.length*1.2}" src="assets/img/card_cover.png"
+        <img (click)="drawCard()" class="topCard" [ngStyle]="{'right.px': this.game?.stack.length*1.2, 'bottom.px': this.game?.stack.length*1.2}" src="assets/img/card_cover.png"
             alt="">
-        <img class="discards" *ngFor="let c of this.game.playedCards; let i = index"
-            [ngStyle]="{'right.px': i*1.2, 'bottom.px': i*1.2}" src="assets/img/{{this.game.playedCards[i]}}.png"
+        <img class="discards" *ngFor="let c of this.game?.playedCards; let i = index" 
+            [ngStyle]="{'right.px': i*1.2, 'bottom.px': i*1.2}" src="assets/img/{{this.game?.playedCards[i]}}.png"
             alt="">
-        <img *ngIf="this.game.stack.length > 0 && this.pickCardAnimation" class="pickCard" [ngStyle]="{'right.px': this.game.stack.length*1.2, 'bottom.px': this.game.stack.length*1.2}"
+        <img *ngIf="this.game?.stack.length > 0 && this.pickCardAnimation" class="pickCard" [ngStyle]="{'right.px': this.game?.stack.length*1.2, 'bottom.px': this.game?.stack.length*1.2}"
             src="assets/img/{{this.currentCard}}.png" alt="">
     </div>
 
-    <button [disabled]="game.players.length > 8" class="addButton" mat-fab color="primary" (click)="openDialog()">
+    <button [disabled]="game?.players.length > 8" class="addButton" mat-fab color="primary" (click)="openDialog()">
         <mat-icon>add</mat-icon>
     </button>
 

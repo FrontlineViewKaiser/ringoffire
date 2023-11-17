@@ -8,7 +8,11 @@ import {
   collectionData,
   onSnapshot,
   addDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -18,36 +22,38 @@ import {
 export class GameComponent implements OnInit, OnDestroy {
   pickCardAnimation = false;
   currentCard = '';
-  game!: Game;
+  currentGame: string;
+  game = new Game(this.firestore);
   coll;
+  doc;
   unsubGame;
 
   constructor(public dialog: MatDialog, private firestore: Firestore) {}
 
   ngOnInit() {
-    this.coll = collection(this.firestore, 'games');
-    this.unsubGame = onSnapshot(this.coll, (games) => {
-      games.forEach((game) => {
-        console.log(game.data());
-      });
-    });
-    this.newGame();
+    this.initializeData();
   }
 
   ngOnDestroy(): void {
     this.unsubGame();
+    this.deleteGameInstance();
   }
 
-  async newGame() {
-    this.game = new Game();
-    await addDoc(this.coll, 'game')
-      .catch((err) => {
-        console.error(err);
-      })
-      .then((docRef) => {
-        console.log('New Doc created with ID:', docRef);
-      });
+  async initializeData() {
+    await this.game.newGame(this.firestore);
+    this.defineRef();
+    this.updateGame()
     console.log(this.game);
+  }
+
+  async defineRef() {
+    this.currentGame = this.game.id;
+    this.coll = collection(this.firestore, 'games');
+    this.doc = doc(this.coll, this.currentGame);
+  }
+
+  async deleteGameInstance() {
+    await deleteDoc(doc(this.coll, this.currentGame));
   }
 
   drawCard() {
@@ -60,18 +66,38 @@ export class GameComponent implements OnInit, OnDestroy {
         this.pickCardAnimation = false;
         this.game.currentPlayer =
           (this.game.currentPlayer + 1) % this.game.players.length;
+        this.updateDoc();
       }, 1200);
     }
   }
 
-  openDialog(): void {
+  openDialog() {
     const dialogRef = this.dialog.open(DialogComponent);
-    console.log(this.game);
 
     dialogRef.afterClosed().subscribe((name) => {
-      if (name > 0) {
+      if (name.length > 0) {
         this.game.players.push(name);
+        this.updateDoc();
       }
+    });
+  }
+
+  async updateDoc() {
+    await updateDoc(this.doc, {
+      players: this.game.players,
+      stack: this.game.stack,
+      playedCards: this.game.playedCards,
+      currentPlayer: this.game.currentPlayer,
+    });
+  }
+
+  async updateGame() {
+    this.unsubGame = onSnapshot(this.doc, (doc) => {
+      console.log(doc.data())
+      this.game.players = doc.data().players;
+      this.game.stack = doc.data().stack;
+      this.game.playedCards = doc.data().playedCards;
+      this.game.currentPlayer = doc.data().playedCards;
     });
   }
 }
