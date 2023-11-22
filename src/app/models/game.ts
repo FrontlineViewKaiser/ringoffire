@@ -29,7 +29,7 @@ export class Game {
 async newGame(firestore) {
   const coll = collection(firestore, 'games');
   await addDoc(coll, {
-    players: null,
+    players: [],
     stack: this.stack,
     playedCards: this.playedCards,
     currentPlayer: this.currentPlayer
